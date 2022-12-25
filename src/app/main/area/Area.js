@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
-import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import DemoContent from "@fuse/core/DemoContent";
+import AreasTable from "./Table";
+import AddButton from "./Button";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -17,22 +17,12 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function Dashbaord(props) {
-  const { t } = useTranslation("examplePage");
-
   return (
     <Root
-      header={
-        <div className="p-24">
-          {/* <h4>{t("TITLE")}</h4>
-           */}
-          <h4>Area</h4>
-        </div>
-      }
       content={
         <div className="p-24">
-          <h4>Content</h4>
-
-          {/* <DemoContent /> */}
+          <AddButton />
+          <AreasTable />
         </div>
       }
       scroll="content"
