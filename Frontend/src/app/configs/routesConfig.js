@@ -20,11 +20,11 @@ const routes = [
     routeConfigs,
     settingsConfig.defaultAuth
   ),
-  // {
-  //   path: "/",
-  //   element: <Navigate to="/example" />,
-  //   auth: settingsConfig.defaultAuth,
-  // },
+  {
+    path: "/",
+    element: <Dashboard />,
+    auth: settingsConfig.defaultAuth,
+  },
   {
     path: "dashboard",
     element: <Dashboard />,
