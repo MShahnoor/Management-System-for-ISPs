@@ -64,63 +64,66 @@ const ActionIcons = (id) => {
   );
 };
 
-const rows = [
-  {
-    id: 0,
-    code: "A",
-    name: "Central Avenue DHA",
-    activeUsers: 4,
-    streets: 6,
-  },
-  {
-    id: 1,
-    code: "B",
-    name: "H Block Valencia",
-    activeUsers: 2,
-    streets: 3,
-  },
-  { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-  { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-  {
-    id: 0,
-    code: "A",
-    name: "Central Avenue DHA",
-    activeUsers: 4,
-    streets: 6,
-  },
-  {
-    id: 1,
-    code: "B",
-    name: "H Block Valencia",
-    activeUsers: 2,
-    streets: 3,
-  },
-  { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-  { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-  {
-    id: 0,
-    code: "A",
-    name: "Central Avenue DHA",
-    activeUsers: 4,
-    streets: 6,
-  },
-  {
-    id: 1,
-    code: "B",
-    name: "H Block Valencia",
-    activeUsers: 2,
-    streets: 3,
-  },
-  { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-  { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-];
+// const rows = [
+//   {
+//     id: 0,
+//     code: "A",
+//     name: "Central Avenue DHA",
+//     activeUsers: 4,
+//     streets: 6,
+//   },
+//   {
+//     id: 1,
+//     code: "B",
+//     name: "H Block Valencia",
+//     activeUsers: 2,
+//     streets: 3,
+//   },
+//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
+//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
+//   {
+//     id: 0,
+//     code: "A",
+//     name: "Central Avenue DHA",
+//     activeUsers: 4,
+//     streets: 6,
+//   },
+//   {
+//     id: 1,
+//     code: "B",
+//     name: "H Block Valencia",
+//     activeUsers: 2,
+//     streets: 3,
+//   },
+//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
+//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
+//   {
+//     id: 0,
+//     code: "A",
+//     name: "Central Avenue DHA",
+//     activeUsers: 4,
+//     streets: 6,
+//   },
+//   {
+//     id: 1,
+//     code: "B",
+//     name: "H Block Valencia",
+//     activeUsers: 2,
+//     streets: 3,
+//   },
+//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
+//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
+// ];
 
 export default function AreasTable() {
+  const [rows, setRows] = React.useState([]);
   const [areas, setAreas] = React.useState(
     rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
   );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -130,6 +133,30 @@ export default function AreasTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+
+  const getData = () => {
+    
+    console.log("In getData Function.")
+    const url = 'http://localhost:3001/getAreas'    
+    axios.get(url).then((res)=>{
+      console.log(res.data)
+      setRows(res.data)
+      console.log(rows)
+    })
+
+
+
+    
+    // setRows(data);
+    // console.log('Heoolw')
+    // console.log(rows)
+    
+    
+    }
+
+  //getData();
+  React.useEffect(()=>getData(), [rows])
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
