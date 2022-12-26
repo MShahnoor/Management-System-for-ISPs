@@ -117,13 +117,9 @@ const ActionIcons = (id) => {
 
 export default function AreasTable() {
   const [rows, setRows] = React.useState([]);
-  const [areas, setAreas] = React.useState(
-    rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
-  );
+  const [areas, setAreas] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
-
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -134,29 +130,22 @@ export default function AreasTable() {
     setPage(0);
   };
 
-
   const getData = () => {
-    
-    console.log("In getData Function.")
-    const url = 'http://localhost:3001/getAreas'    
-    axios.get(url).then((res)=>{
-      console.log(res.data)
-      setRows(res.data)
-      console.log(rows)
-    })
+    const url = "http://localhost:3001/getAreas";
+    axios
+      .get(url)
+      .then((res) => {
+        setRows(res.data);
+        setAreas(
+          rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-
-
-    
-    // setRows(data);
-    // console.log('Heoolw')
-    // console.log(rows)
-    
-    
-    }
-
-  //getData();
-  React.useEffect(()=>getData(), [rows])
+  React.useEffect(() => getData(), [rows, areas]);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
