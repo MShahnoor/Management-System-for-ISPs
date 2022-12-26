@@ -4,7 +4,9 @@
   "description": "",
   "proxy": "http://localhost:3001",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "serve": "nodemon server.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
