@@ -64,57 +64,6 @@ const ActionIcons = (id) => {
   );
 };
 
-// const rows = [
-//   {
-//     id: 0,
-//     code: "A",
-//     name: "Central Avenue DHA",
-//     activeUsers: 4,
-//     streets: 6,
-//   },
-//   {
-//     id: 1,
-//     code: "B",
-//     name: "H Block Valencia",
-//     activeUsers: 2,
-//     streets: 3,
-//   },
-//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-//   {
-//     id: 0,
-//     code: "A",
-//     name: "Central Avenue DHA",
-//     activeUsers: 4,
-//     streets: 6,
-//   },
-//   {
-//     id: 1,
-//     code: "B",
-//     name: "H Block Valencia",
-//     activeUsers: 2,
-//     streets: 3,
-//   },
-//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-//   {
-//     id: 0,
-//     code: "A",
-//     name: "Central Avenue DHA",
-//     activeUsers: 4,
-//     streets: 6,
-//   },
-//   {
-//     id: 1,
-//     code: "B",
-//     name: "H Block Valencia",
-//     activeUsers: 2,
-//     streets: 3,
-//   },
-//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-// ];
-
 export default function AreasTable() {
   const [rows, setRows] = React.useState([]);
   const [areas, setAreas] = React.useState([]);
