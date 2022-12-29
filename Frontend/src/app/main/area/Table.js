@@ -94,9 +94,6 @@ export default function AreasData() {
       .get(url)
       .then((res) => {
         setRows(res.data);
-        setAreas(
-          rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
-        );
       })
       .catch((error) => {
         setIsError(true);
@@ -106,10 +103,14 @@ export default function AreasData() {
   };
 
   React.useEffect(() => {
-    if (!areas.length) {
-      getData();
-    }
+    setAreas(
+      rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
+    );
   }, [rows]);
+
+  React.useEffect(() => {
+    getData();
+  }, []);
 
   if (isLoading) {
     return <LoadingIllustration />;
@@ -168,12 +169,7 @@ export default function AreasData() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.areaCode}
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
