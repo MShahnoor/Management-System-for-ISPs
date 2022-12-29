@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import FusePageSimple from "@fuse/core/FusePageSimple";
 import AreasData from "./Table";
 import AddButton from "./Button";
+import FormDialog from "./AddAreaButton";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -39,7 +40,7 @@ function Dashbaord(props) {
               paddingRight: 30,
             }}
           >
-            <AddButton />
+            <FormDialog />
           </div>
           <div
             style={{
