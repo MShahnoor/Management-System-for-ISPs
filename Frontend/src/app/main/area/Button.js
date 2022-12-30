@@ -6,8 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 export default function AddButton() {
   return (
     <Box
-      sx={{ "& > :not(style)": { mb: 3 } }}
-      align="right"
+      // sx={{ "& > :not(style)": { mb: 3 }, position: "absolute", right: 20 }}
       aria-label="sticky"
     >
       <Fab variant="extended" color="primary" aria-label="add">

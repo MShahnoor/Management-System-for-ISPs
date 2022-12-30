@@ -12,6 +12,9 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
+import EmptyResponseIllustration from "../illustrations/empty";
+import LoadingIllustration from "../illustrations/loading";
+import ErrorIllustration from "../illustrations/error";
 
 const columns = [
   { id: "code", label: "Area Code", minWidth: 190 },
@@ -82,62 +85,14 @@ const ActionIcons = (id) => {
   );
 };
 
-// const rows = [
-//   {
-//     id: 0,
-//     code: "A",
-//     name: "Central Avenue DHA",
-//     activeUsers: 4,
-//     streets: 6,
-//   },
-//   {
-//     id: 1,
-//     code: "B",
-//     name: "H Block Valencia",
-//     activeUsers: 2,
-//     streets: 3,
-//   },
-//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-//   {
-//     id: 0,
-//     code: "A",
-//     name: "Central Avenue DHA",
-//     activeUsers: 4,
-//     streets: 6,
-//   },
-//   {
-//     id: 1,
-//     code: "B",
-//     name: "H Block Valencia",
-//     activeUsers: 2,
-//     streets: 3,
-//   },
-//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-//   {
-//     id: 0,
-//     code: "A",
-//     name: "Central Avenue DHA",
-//     activeUsers: 4,
-//     streets: 6,
-//   },
-//   {
-//     id: 1,
-//     code: "B",
-//     name: "H Block Valencia",
-//     activeUsers: 2,
-//     streets: 3,
-//   },
-//   { id: 2, code: "C", name: "LDA Avenue", activeUsers: 4, streets: 5 },
-//   { id: 3, code: "D", name: "Mall Road", activeUsers: 14, streets: 7 },
-// ];
-
-export default function AreasTable() {
+export default function AreasData() {
   const [rows, setRows] = React.useState([]);
   const [areas, setAreas] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [isError, setIsError] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -150,6 +105,8 @@ export default function AreasTable() {
 
   const getData = () => {
     const url = "http://localhost:3001/api/area/getAreas";
+    setIsLoading(true);
+
     axios
       .get(url)
       .then((res) => {
@@ -159,67 +116,110 @@ export default function AreasTable() {
         );
       })
       .catch((error) => {
-        console.log(error);
-      });
+        setIsError(true);
+        setError(error.message);
+      })
+      .finally(() => setIsLoading(false));
   };
 
-  React.useEffect(() => getData(), [rows, areas]);
+  React.useEffect(() => {
+    if (!areas.length) {
+      getData();
+    }
+  }, [rows]);
 
-  return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 418 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead sx={{ backgroundColor: "black" }}>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {areas
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.areaCode}
+  if (isLoading) {
+    return <LoadingIllustration />;
+  } else if (isError) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 style={{ padding: 20 }}>{error}</h1>
+        <ErrorIllustration />
+      </div>
+    );
+  } else if (!areas.length) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 style={{ padding: 20 }}>No areas Found</h1>
+        <EmptyResponseIllustration />
+      </div>
+    );
+  } else {
+    return (
+      <Paper
+        sx={{
+          overflow: "hidden",
+        }}
+      >
+        <TableContainer sx={{ maxHeight: 418 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead sx={{ backgroundColor: "black" }}>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
                   >
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <>
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        </>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
-  );
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {areas
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row.areaCode}
+                    >
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <>
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === "number"
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          </>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    );
+  }
 }
