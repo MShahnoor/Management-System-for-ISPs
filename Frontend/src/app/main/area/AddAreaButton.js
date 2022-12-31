@@ -9,7 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
-import axios from 'axios'
+import axios from "axios";
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -30,6 +30,7 @@ export default function FormDialog() {
       .post(url, { code: code, name: name })
       .then((res) => {
         console.log(res);
+        handleClose();
       })
       .catch((err) => {
         console.log(err);
