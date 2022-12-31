@@ -9,9 +9,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "axios";
+import { useAreasContext } from "../hooks/useAreasContext";
 
 export default function FormDialog() {
+  const { dispatch } = useAreasContext();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [code, setCode] = React.useState("");
@@ -24,25 +25,34 @@ export default function FormDialog() {
     setOpen(false);
   };
 
-  const addAreaHandler = () => {
-    let url = "http://localhost:3001/api/area/addArea";
-    axios
-      .post(url, { code: code, name: name })
-      .then((res) => {
-        console.log(res);
-        handleClose();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const addAreaHandler = async (e) => {
+    e.preventDefault();
+
+    const area = { code, name };
+
+    const response = await fetch("http://localhost:3001/api/area/addArea", {
+      method: "POST",
+      body: JSON.stringify(area),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await response.json();
+
+    if (!response.ok) {
+      setError(json.error);
+    }
+    if (response.ok) {
+      setName("");
+      setCode("");
+      dispatch({ type: "CREATE_AREA", payload: json });
+      handleClose();
+    }
   };
 
   return (
     <div>
-      <Box
-        // sx={{ "& > :not(style)": { mb: 3 }, position: "absolute", right: 20 }}
-        aria-label="sticky"
-      >
+      <Box aria-label="sticky">
         <Fab
           variant="extended"
           color="primary"
@@ -53,7 +63,7 @@ export default function FormDialog() {
           Add Area
         </Fab>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} onSubmit={addAreaHandler}>
         <DialogTitle>Add Area</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -61,6 +71,7 @@ export default function FormDialog() {
             We will send updates occasionally.
           </DialogContentText>
           <TextField
+            value={code}
             autoFocus
             margin="dense"
             id="code"
@@ -73,6 +84,7 @@ export default function FormDialog() {
             }}
           />
           <TextField
+            value={name}
             autoFocus
             margin="dense"
             id="name"
@@ -86,7 +98,9 @@ export default function FormDialog() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" onClick={handleClose}>
+            Cancel
+          </Button>
           <Button onClick={addAreaHandler}>Add Area</Button>
         </DialogActions>
       </Dialog>
