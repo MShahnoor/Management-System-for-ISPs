@@ -5,7 +5,7 @@ var cors = require("cors");
 const port = 3001;
 const mongoose = require("mongoose");
 const Area = require("../Modles/areaModel");
-const Area = require("../Modles/packageModel");
+const Package = require("../Modles/packageModel");
 
 app.use(express.json());
 app.use(cors());
@@ -81,8 +81,6 @@ app.get("/getPackages", async (req, res) => {
         name: response[i].name,
         monthlyFee: response[i].monthlyFee,
         mbs: response[i].mbs,
-        activeUsers: 2,
-        streets: 3,
       };
       packages.push(obj);
     }
