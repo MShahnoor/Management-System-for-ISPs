@@ -41,15 +41,28 @@ const columns = [
   },
 ];
 
+const deleteAreaHandler = ({ id }) => {
+  const url = `http://localhost:3001/api/area/deleteArea/` + id;
+
+  axios
+    .delete(url)
+    .then((response) => {
+      if (!response) {
+        console.log("Area Deleted Successfully");
+      }
+    })
+    .catch((error) => {
+      console.error("There was an error!", error.message);
+    });
+};
+
 const ActionIcons = (id) => {
   return (
     <Stack direction="row" alignItems="center" paddingLeft={9} height={15}>
       <IconButton
         aria-label="delete"
         size="small"
-        onClick={() => {
-          console.log(id);
-        }}
+        onClick={() => deleteAreaHandler(id)}
       >
         <DeleteIcon />
       </IconButton>
@@ -88,7 +101,7 @@ export default function AreasData() {
   const getData = () => {
     setIsLoading(true);
 
-    const url = "http://localhost:3001/getAreas";
+    const url = "http://localhost:3001/api/area/getAreas";
 
     axios
       .get(url)
