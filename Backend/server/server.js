@@ -1,45 +1,17 @@
 const express = require("express");
-const app = express();
 var cors = require("cors");
-
-const port = 3001;
 const mongoose = require("mongoose");
-const Area = require("../Modles/areaModel");
-const Package = require("../Modles/packageModel");
+const areaRoutes = require("../routes/areaRoutes");
+const packageRoutes = require("../routes/packageRoutes");
 
+const app = express();
+const port = 3001;
 app.use(express.json());
 app.use(cors());
 
-app.post("/addPackage", async (req, res) => {
-  const { name, monthlyFee, mbs } = req.body;
-  try {
-    const package = await Package.create({ name, monthlyFee, mbs });
-    res.send(package);
-  } catch (err) {
-    res.send("Error");
-    console.log(err.message);
-  }
-});
-
-app.get("/getPackages", async (req, res) => {
-  try {
-    let response = await Package.find().select("name monthlyFee mbs");
-
-    let packages = [];
-    for (i = 0; i < response.length; i++) {
-      obj = {
-        id: response[i]._id,
-        name: response[i].name,
-        monthlyFee: response[i].monthlyFee,
-        mbs: response[i].mbs,
-      };
-      packages.push(obj);
-    }
-    res.send(packages);
-  } catch (error) {
-    res.send(error.message);
-  }
-});
+//Routes
+app.use("/api/area", areaRoutes);
+app.use("/api/package", packageRoutes);
 
 //DB Connection
 mongoose
@@ -55,4 +27,5 @@ mongoose
   })
   .catch((error) => {
     console.log("Fooking error in connection to mongo");
+    console.log(error.message);
   });
