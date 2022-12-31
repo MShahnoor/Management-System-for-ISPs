@@ -18,8 +18,19 @@ import ErrorIllustration from "../illustrations/error";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 190 },
-  { id: "monthlyFee", label: "Monthly Fee", minWidth: 200 },
-  { id: "mbs", label: "MBs", minWidth: 200 },
+  {
+    id: "monthlyFee",
+    label: "Monthly Fee",
+    minWidth: 100,
+    align: "right",
+  },
+  { id: "mbs", label: "MBs", minWidth: 200, align: "right" },
+  {
+    id: "actions",
+    label: "Actions",
+    minWidth: 250,
+    align: "center",
+  },
 ];
 
 const ActionIcons = (id) => {
@@ -48,7 +59,7 @@ const ActionIcons = (id) => {
   );
 };
 
-export default function AreasData() {
+export default function PackagesData() {
   const [rows, setRows] = React.useState([]);
   const [packages, setPackages] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -75,9 +86,6 @@ export default function AreasData() {
       .get(url)
       .then((res) => {
         setRows(res.data);
-        setPackages(
-          rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
-        );
       })
       .catch((error) => {
         setIsError(true);
@@ -85,12 +93,15 @@ export default function AreasData() {
       })
       .finally(() => setIsLoading(false));
   };
+  React.useEffect(() => {
+    setPackages(
+      rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
+    );
+  }, [rows]);
 
   React.useEffect(() => {
-    if (!packages.length) {
-      getData();
-    }
-  }, [rows]);
+    getData();
+  }, []);
 
   if (isLoading) {
     return <LoadingIllustration />;
