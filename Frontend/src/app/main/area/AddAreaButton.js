@@ -9,6 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import axios from 'axios'
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -24,7 +25,7 @@ export default function FormDialog() {
   };
 
   const addAreaHandler = () => {
-    url = "http://localhost:3001/api/area/addArea";
+    let url = "http://localhost:3001/api/area/addArea";
     axios
       .post(url, { code: code, name: name })
       .then((res) => {
@@ -52,7 +53,7 @@ export default function FormDialog() {
         </Fab>
       </Box>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Add Area</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To subscribe to this website, please enter your email address here.
@@ -85,7 +86,7 @@ export default function FormDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button onClick={addAreaHandler}>Add Area</Button>
         </DialogActions>
       </Dialog>
     </div>
