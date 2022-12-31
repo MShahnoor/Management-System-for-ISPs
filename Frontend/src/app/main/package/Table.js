@@ -80,7 +80,7 @@ export default function PackagesData() {
   const getData = () => {
     setIsLoading(true);
 
-    const url = "http://localhost:3001/getPackages";
+    const url = "http://localhost:3001/api/package/getPackages";
 
     axios
       .get(url)
