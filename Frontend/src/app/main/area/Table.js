@@ -15,9 +15,7 @@ import axios from "axios";
 import EmptyResponseIllustration from "../illustrations/empty";
 import LoadingIllustration from "../illustrations/loading";
 import ErrorIllustration from "../illustrations/error";
-import EmptyResponseIllustration from "../illustrations/empty";
-import LoadingIllustration from "../illustrations/loading";
-import ErrorIllustration from "../illustrations/error";
+
 
 const columns = [
   { id: "code", label: "Area Code", minWidth: 190 },
@@ -89,7 +87,7 @@ const ActionIcons = (id) => {
 };
 
 export default function AreasData() {
-export default function AreasData() {
+
   const [rows, setRows] = React.useState([]);
   const [areas, setAreas] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -111,8 +109,6 @@ export default function AreasData() {
     setIsLoading(true);
 
     const url = "http://localhost:3001/api/area/getAreas";
-
-    setIsLoading(true);
 
     axios
       .get(url)
@@ -139,7 +135,7 @@ export default function AreasData() {
       getData();
     }
   }, [rows]);
-
+{
   if (isLoading) {
     return <LoadingIllustration />;
   } else if (isError) {
@@ -235,98 +231,6 @@ export default function AreasData() {
     );
   }
 }
-  if (isLoading) {
-    return <LoadingIllustration />;
-  } else if (isError) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <h1 style={{ padding: 20 }}>{error}</h1>
-        <ErrorIllustration />
-      </div>
-    );
-  } else if (!areas.length) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <h1 style={{ padding: 20 }}>No areas Found</h1>
-        <EmptyResponseIllustration />
-      </div>
-    );
-  } else {
-    return (
-      <Paper
-        sx={{
-          overflow: "hidden",
-        }}
-      >
-        <TableContainer sx={{ maxHeight: 418 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead sx={{ backgroundColor: "black" }}>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {areas
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.areaCode}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <>
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          </>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
 
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    );
-  }
+
 }
