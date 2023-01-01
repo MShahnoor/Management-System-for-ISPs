@@ -56,6 +56,7 @@ router.delete("/deleteArea/:id", async (req, res) => {
 });
 
 router.patch("/editArea/:id", async (req, res) => {
+  console.log("Patch request recieved.")
   try {
     const area = Area.findOneAndUpdate(
       { _id: req.params.id },
@@ -64,12 +65,33 @@ router.patch("/editArea/:id", async (req, res) => {
       }
     );
     if (area) {
-      response.status(200).json(area);
+      res.status(200).json(area);
     }
   } catch (e) {
-    response.status(404).send("Errorr");
+    res.status(404).json({error: "Error in edit area route"});
     console.log(e.message);
   }
 });
+
+router.patch("/editArea2/:id", async(req, res) => {
+  console.log("Patch2 request recieved.")
+  try {
+    console.log(req.params.id)
+    console.log(req.body)
+    const area = await Area.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        code: req.body.code,
+        name: req.body.name
+      }
+    );
+    if (area) {
+      res.status(200).json(area);
+    }
+  } catch (e) {
+    res.status(404).json({error: "Error in edit area route"});
+    console.log(e.message);
+  }
+})
 
 module.exports = router;

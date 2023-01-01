@@ -8,8 +8,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useAreasContext } from "../../hooks/useAreasContext";
 
-export default function EditAction(obj) {
+const EditAction = (obj) => {
+  const { dispatch } = useAreasContext();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(obj.id.name);
   const [code, setCode] = React.useState(obj.id.code);
@@ -27,17 +29,21 @@ export default function EditAction(obj) {
 
   const editAreaHandler = async (e) => {
     e.preventDefault();
+   
 
     const area = { code, name };
+    
+    let url = `http://localhost:3001/api/area/editArea2/${obj.id.id}`
+    console.log(url)
 
     const response = await fetch(
-      `http://localhost:3001/api/area/editArea/${obj.id.id}`,
+      url,
       {
         method: "PATCH",
         body: JSON.stringify(area),
         headers: {
           "Content-Type": "application/json",
-        },
+        }
       }
     );
     const json = await response.json();
@@ -48,7 +54,7 @@ export default function EditAction(obj) {
     if (response.ok) {
       setName("");
       setCode("");
-      // dispatch({ type: "CREATE_AREA", payload: json });
+      dispatch({ type: "EDIT_AREA", payload: { id: obj.id.id, ...area} });
       handleClose();
     }
   };
@@ -107,3 +113,6 @@ export default function EditAction(obj) {
     </div>
   );
 }
+
+
+export default EditAction;
