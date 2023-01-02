@@ -33,32 +33,6 @@ const columns = [
   },
 ];
 
-const ActionIcons = (id) => {
-  return (
-    <Stack direction="row" alignItems="center" paddingLeft={9} height={15}>
-      <IconButton
-        aria-label="delete"
-        size="small"
-        onClick={() => {
-          console.log(id);
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
-      <IconButton
-        aria-label="delete"
-        size="small"
-        sx={{ marginLeft: 1 }}
-        onClick={() => {
-          console.log(id);
-        }}
-      >
-        <EditIcon />
-      </IconButton>
-    </Stack>
-  );
-};
-
 export default function PackagesData() {
   const [rows, setRows] = React.useState([]);
   const [packages, setPackages] = React.useState([]);
@@ -75,6 +49,47 @@ export default function PackagesData() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const deletePackageHandler = ({ id }) => {
+    const url = `http://localhost:3001/api/package/deletePackage/` + id;
+    console.log("Delete request received");
+
+    axios
+      .delete(url)
+      .then((response) => {
+        if (response) {
+          console.log("Package Deleted Successfully");
+          getData();
+        }
+      })
+      .catch((error) => {
+        console.error("There was an error!", error.message);
+      });
+  };
+
+  const ActionIcons = (id) => {
+    return (
+      <Stack direction="row" alignItems="center" paddingLeft={9} height={15}>
+        <IconButton
+          aria-label="delete"
+          size="small"
+          onClick={() => deletePackageHandler(id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+        <IconButton
+          aria-label="delete"
+          size="small"
+          sx={{ marginLeft: 1 }}
+          onClick={() => {
+            console.log(id);
+          }}
+        >
+          <EditIcon />
+        </IconButton>
+      </Stack>
+    );
   };
 
   const getData = () => {
