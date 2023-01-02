@@ -37,4 +37,18 @@ router.post("/addPackage", async (req, res) => {
   }
 });
 
+router.delete("/deletePackage/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deletedPackage = await Package.findOneAndDelete({ _id: id });
+    if (!deletedPackage) {
+      res.status(404).send("No Package Found!");
+    }
+    res.status(200).send(deletedPackage);
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
 module.exports = router;

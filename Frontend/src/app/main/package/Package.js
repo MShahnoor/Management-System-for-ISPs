@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
 import PackagesData from "./Table";
 import AddButton from "./Button";
+import FormDialog from "./AddPackageButton";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -40,7 +41,7 @@ function Package(props) {
               paddingRight: 30,
             }}
           >
-            <AddButton />
+            <FormDialog />
           </div>
           <div
             style={{
