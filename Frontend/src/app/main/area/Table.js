@@ -7,14 +7,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import axios from "axios";
 import EmptyResponseIllustration from "../illustrations/empty";
 import LoadingIllustration from "../illustrations/loading";
 import ErrorIllustration from "../illustrations/error";
+import { useAreasContext } from "../hooks/useAreasContext";
+import ActionIcons from "./ActionIcons/ActionIcons";
 
 const columns = [
   { id: "code", label: "Area Code", minWidth: 190 },
@@ -40,49 +37,10 @@ const columns = [
     align: "center",
   },
 ];
-
-const deleteAreaHandler = ({ id }) => {
-  const url = `http://localhost:3001/api/area/deleteArea/` + id;
-
-  axios
-    .delete(url)
-    .then((response) => {
-      if (!response) {
-        console.log("Area Deleted Successfully");
-      }
-    })
-    .catch((error) => {
-      console.error("There was an error!", error.message);
-    });
-};
-
-const ActionIcons = (id) => {
-  return (
-    <Stack direction="row" alignItems="center" paddingLeft={9} height={15}>
-      <IconButton
-        aria-label="delete"
-        size="small"
-        onClick={() => deleteAreaHandler(id)}
-      >
-        <DeleteIcon />
-      </IconButton>
-      <IconButton
-        aria-label="delete"
-        size="small"
-        sx={{ marginLeft: 1 }}
-        onClick={() => {
-          console.log(id);
-        }}
-      >
-        <EditIcon />
-      </IconButton>
-    </Stack>
-  );
-};
-
 export default function AreasData() {
   const [rows, setRows] = React.useState([]);
-  const [areas, setAreas] = React.useState([]);
+  const { areas, dispatch } = useAreasContext();
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -98,87 +56,89 @@ export default function AreasData() {
     setPage(0);
   };
 
-  const getData = () => {
+  const getData = async () => {
     setIsLoading(true);
+    setIsError(false);
 
-    const url = "http://localhost:3001/api/area/getAreas";
-
-    axios
-      .get(url)
-      .then((res) => {
-        setRows(res.data);
-      })
-      .catch((error) => {
-        setIsError(true);
-        setError(error.message);
-      })
-      .finally(() => setIsLoading(false));
+    try {
+      const response = await fetch("http://localhost:3001/api/area/getAreas");
+      const json = await response.json();
+      if (response.ok) {
+        dispatch({ type: "SET_AREAS", payload: json });
+      }
+    } catch (error) {
+      setIsError(true);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   React.useEffect(() => {
-    setAreas(
-      rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
+    setRows(
+      areas.map((obj) => ({ ...obj, actions: <ActionIcons obj={obj} /> }))
     );
-  }, [rows]);
+  }, [areas]);
 
   React.useEffect(() => {
     getData();
-  }, []);
-  {
-    if (isLoading) {
-      return <LoadingIllustration />;
-    } else if (isError) {
-      return (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h1 style={{ padding: 20 }}>{error}</h1>
-          <ErrorIllustration />
-        </div>
-      );
-    } else if (!areas.length) {
-      return (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h1 style={{ padding: 20 }}>No areas Found</h1>
-          <EmptyResponseIllustration />
-        </div>
-      );
-    } else {
-      return (
-        <Paper
-          sx={{
-            overflow: "hidden",
-          }}
-        >
-          <TableContainer sx={{ maxHeight: 418 }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableHead sx={{ backgroundColor: "black" }}>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {areas
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <LoadingIllustration />;
+  } else if (isError) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 style={{ padding: 20 }}>{error}</h1>
+        <ErrorIllustration />
+      </div>
+    );
+  } else if (rows && !rows.length) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <h1 style={{ padding: 20 }}>No areas Found</h1>
+        <EmptyResponseIllustration />
+      </div>
+    );
+  } else {
+    return (
+      <Paper
+        sx={{
+          overflow: "hidden",
+        }}
+      >
+        <TableContainer sx={{ maxHeight: 418 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead sx={{ backgroundColor: "black" }}>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows &&
+                rows
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
@@ -186,7 +146,7 @@ export default function AreasData() {
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.areaCode}
+                        key={row.id}
                       >
                         {columns.map((column) => {
                           const value = row[column.id];
@@ -203,21 +163,20 @@ export default function AreasData() {
                       </TableRow>
                     );
                   })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      );
-    }
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={areas.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    );
   }
 }
