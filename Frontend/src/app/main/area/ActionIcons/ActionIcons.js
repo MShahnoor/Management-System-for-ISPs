@@ -1,6 +1,4 @@
 import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-
 import DeleteAction from "./DeleteAction";
 import EditAction from "./EditAction";
 
@@ -12,5 +10,4 @@ const ActionIcons = ({ obj }) => {
     </Stack>
   );
 };
-
 export default ActionIcons;
