@@ -17,9 +17,6 @@ const EditAction = (obj) => {
   const [code, setCode] = React.useState(obj.id.code);
 
   const handleClickOpen = () => {
-    console.log("in edit func: ");
-    console.log(obj);
-    console.log(obj.id.name);
     setOpen(true);
   };
 
@@ -29,32 +26,26 @@ const EditAction = (obj) => {
 
   const editAreaHandler = async (e) => {
     e.preventDefault();
-   
 
     const area = { code, name };
-    
-    let url = `http://localhost:3001/api/area/editArea2/${obj.id.id}`
-    console.log(url)
 
-    const response = await fetch(
-      url,
-      {
-        method: "PATCH",
-        body: JSON.stringify(area),
-        headers: {
-          "Content-Type": "application/json",
-        }
-      }
-    );
+    let url = `http://localhost:3001/api/area/editArea2/${obj.id.id}`;
+    console.log(url);
+
+    const response = await fetch(url, {
+      method: "PATCH",
+      body: JSON.stringify(area),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     const json = await response.json();
 
     if (!response.ok) {
       setError(json.error);
     }
     if (response.ok) {
-      setName("");
-      setCode("");
-      dispatch({ type: "EDIT_AREA", payload: { id: obj.id.id, ...area} });
+      dispatch({ type: "EDIT_AREA", payload: { id: obj.id.id, ...area } });
       handleClose();
     }
   };
@@ -112,7 +103,6 @@ const EditAction = (obj) => {
       </Dialog>
     </div>
   );
-}
-
+};
 
 export default EditAction;
