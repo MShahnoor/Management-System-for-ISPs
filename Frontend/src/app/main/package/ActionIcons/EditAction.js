@@ -34,8 +34,6 @@ const EditAction = (obj) => {
 
     let url = `http://localhost:3001/api/package/editPackage/${obj.id._id}`;
 
-    console.log("url");
-    console.log(obj.id._id);
     const response = await fetch(url, {
       method: "PATCH",
       body: JSON.stringify(packageType),
@@ -55,7 +53,7 @@ const EditAction = (obj) => {
       setMbs("");
       dispatch({
         type: "EDIT_PACKAGE",
-        payload: { id: obj.id._id, ...packageType },
+        payload: { _id: obj.id._id, ...packageType },
       });
       handleClose();
     }
@@ -72,7 +70,7 @@ const EditAction = (obj) => {
         <EditIcon />
       </IconButton>
       <Dialog open={open} onClose={handleClose} onSubmit={editPackageHandler}>
-        <DialogTitle>Add Package</DialogTitle>
+        <DialogTitle>Edit Package</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To subscribe to this website, please enter your email address here.

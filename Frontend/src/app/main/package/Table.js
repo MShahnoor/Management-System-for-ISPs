@@ -65,8 +65,6 @@ export default function PackagesData() {
     }
   };
   React.useEffect(() => {
-    console.log("packages: ");
-    console.log(packages);
     setRows(
       packages.map((obj) => ({ ...obj, actions: <ActionIcons obj={obj} /> }))
     );
