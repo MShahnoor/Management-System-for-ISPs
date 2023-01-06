@@ -7,24 +7,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import axios from "axios";
 import EmptyResponseIllustration from "../illustrations/empty";
 import LoadingIllustration from "../illustrations/loading";
 import ErrorIllustration from "../illustrations/error";
+import { usePackagesContext } from "../hooks/usePackagesContext";
+import ActionIcons from "./ActionIcons/ActionIcons";
 
 const columns = [
-  { id: "name", label: "Name", minWidth: 190 },
-  {
-    id: "monthlyFee",
-    label: "Monthly Fee",
-    minWidth: 100,
-    align: "right",
-  },
-  { id: "mbs", label: "MBs", minWidth: 200, align: "right" },
+  { id: "name", label: "Name", minWidth: 200 },
+  { id: "monthlyFee", label: "Monthly Fee", minWidth: 190 },
+  { id: "mbs", label: "Mbs", minWidth: 190 },
   {
     id: "actions",
     label: "Actions",
@@ -32,10 +24,10 @@ const columns = [
     align: "center",
   },
 ];
-
 export default function PackagesData() {
   const [rows, setRows] = React.useState([]);
-  const [packages, setPackages] = React.useState([]);
+  const { packages, dispatch } = usePackagesContext();
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -51,72 +43,38 @@ export default function PackagesData() {
     setPage(0);
   };
 
-  const deletePackageHandler = ({ id }) => {
-    const url = `http://localhost:3001/api/package/deletePackage/` + id;
-    console.log("Delete request received");
-
-    axios
-      .delete(url)
-      .then((response) => {
-        if (response) {
-          console.log("Package Deleted Successfully");
-          getData();
-        }
-      })
-      .catch((error) => {
-        console.error("There was an error!", error.message);
-      });
-  };
-
-  const ActionIcons = (id) => {
-    return (
-      <Stack direction="row" alignItems="center" paddingLeft={9} height={15}>
-        <IconButton
-          aria-label="delete"
-          size="small"
-          onClick={() => deletePackageHandler(id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-        <IconButton
-          aria-label="delete"
-          size="small"
-          sx={{ marginLeft: 1 }}
-          onClick={() => {
-            console.log(id);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      </Stack>
-    );
-  };
-
-  const getData = () => {
+  const getData = async () => {
     setIsLoading(true);
+    setIsError(false);
 
-    const url = "http://localhost:3001/api/package/getPackages";
-
-    axios
-      .get(url)
-      .then((res) => {
-        setRows(res.data);
-      })
-      .catch((error) => {
-        setIsError(true);
-        setError(error.message);
-      })
-      .finally(() => setIsLoading(false));
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/package/getPackages"
+      );
+      const json = await response.json();
+      if (response.ok) {
+        console.log("response: ");
+        console.log(json);
+        dispatch({ type: "SET_PACKAGES", payload: json });
+      }
+    } catch (error) {
+      setIsError(true);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
   React.useEffect(() => {
-    setPackages(
-      rows.map((obj) => ({ ...obj, actions: <ActionIcons id={obj.id} /> }))
+    console.log("packages: ");
+    console.log(packages);
+    setRows(
+      packages.map((obj) => ({ ...obj, actions: <ActionIcons obj={obj} /> }))
     );
-  }, [rows]);
+  }, [packages]);
 
   React.useEffect(() => {
     getData();
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <LoadingIllustration />;
@@ -134,7 +92,7 @@ export default function PackagesData() {
         <ErrorIllustration />
       </div>
     );
-  } else if (!packages.length) {
+  } else if (rows && !rows.length) {
     return (
       <div
         style={{
@@ -144,7 +102,7 @@ export default function PackagesData() {
           justifyContent: "space-between",
         }}
       >
-        <h1 style={{ padding: 20 }}>No Package Found</h1>
+        <h1 style={{ padding: 20 }}>No Packages Found</h1>
         <EmptyResponseIllustration />
       </div>
     );
@@ -171,31 +129,32 @@ export default function PackagesData() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {packages
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.name}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <>
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          </>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
+              {rows &&
+                rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                      >
+                        {columns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <>
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === "number"
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            </>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -203,7 +162,7 @@ export default function PackagesData() {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={packages.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
