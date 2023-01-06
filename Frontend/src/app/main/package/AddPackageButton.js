@@ -9,9 +9,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "axios";
+import { usePackagesContext } from "../hooks/usePackagesContext";
 
 export default function FormDialog() {
+  const { dispatch } = usePackagesContext();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState("");
   const [monthlyFee, setMonthlyFee] = React.useState("");
@@ -25,16 +26,33 @@ export default function FormDialog() {
     setOpen(false);
   };
 
-  const addPackageHandler = () => {
-    let url = "http://localhost:3001/api/package/addPackage";
-    axios
-      .post(url, { name: name, monthlyFee: monthlyFee, mbs: mbs })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const addPackageHandler = async (e) => {
+    e.preventDefault();
+
+    const packages = { name, monthlyFee, mbs };
+
+    const response = await fetch(
+      "http://localhost:3001/api/package/addPackage",
+      {
+        method: "POST",
+        body: JSON.stringify(packages),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const json = await response.json();
+
+    if (!response.ok) {
+      setError(json.error);
+    }
+    if (response.ok) {
+      setName("");
+      setMonthlyFee("");
+      setMbs("");
+      dispatch({ type: "CREATE_PACKAGE", payload: json });
+      handleClose();
+    }
   };
 
   return (
@@ -53,7 +71,7 @@ export default function FormDialog() {
           Add Package
         </Fab>
       </Box>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} onSubmit={addPackageHandler}>
         <DialogTitle>Add Package</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -61,10 +79,11 @@ export default function FormDialog() {
             We will send updates occasionally.
           </DialogContentText>
           <TextField
+            value={name}
             autoFocus
             margin="dense"
             id="name"
-            label="name"
+            label="Name"
             type="text"
             fullWidth
             variant="standard"
@@ -73,10 +92,11 @@ export default function FormDialog() {
             }}
           />
           <TextField
+            value={monthlyFee}
             autoFocus
             margin="dense"
             id="monthlyFee"
-            label="monthlyFee"
+            label="MonthlyFee"
             type="text"
             fullWidth
             variant="standard"
@@ -85,10 +105,11 @@ export default function FormDialog() {
             }}
           />
           <TextField
+            value={mbs}
             autoFocus
             margin="dense"
             id="mbs"
-            label="mbs"
+            label="Mbs"
             type="text"
             fullWidth
             variant="standard"
@@ -98,7 +119,9 @@ export default function FormDialog() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" onClick={handleClose}>
+            Cancel
+          </Button>
           <Button onClick={addPackageHandler}>Add Package</Button>
         </DialogActions>
       </Dialog>
