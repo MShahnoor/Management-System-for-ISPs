@@ -1,9 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
 import PackagesData from "./Table";
-import AddButton from "./Button";
 import FormDialog from "./AddPackageButton";
+import { PackagesContextProvider } from "../context/PackageContext";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -18,49 +17,51 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-sidebarContent": {},
 }));
 
-function Package(props) {
+function Packages(props) {
   return (
-    <Root
-      content={
-        <div
-          className="p-24"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "100%",
-          }}
-        >
+    <PackagesContextProvider>
+      <Root
+        content={
           <div
+            className="p-24"
             style={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
+              alignItems: "flex-start",
               width: "100%",
-              justifyContent: "flex-end",
-              paddingBottom: 10,
-              paddingRight: 30,
             }}
           >
-            <FormDialog />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "flex-end",
+                paddingBottom: 10,
+                paddingRight: 30,
+              }}
+            >
+              <FormDialog />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingRight: 30,
+              }}
+            >
+              <PackagesData />
+            </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "center",
-              paddingTop: 10,
-              paddingBottom: 10,
-              paddingRight: 30,
-            }}
-          >
-            <PackagesData />
-          </div>
-        </div>
-      }
-      scroll="content"
-    />
+        }
+        scroll="content"
+      />
+    </PackagesContextProvider>
   );
 }
 
-export default Package;
+export default Packages;
