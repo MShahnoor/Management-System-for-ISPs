@@ -53,8 +53,6 @@ const deleteArea = async (req, res) => {
 const editArea = async (req, res) => {
   console.log("Patch2 request recieved.");
   try {
-    console.log(req.params.id);
-    console.log(req.body);
     const area = await Area.findOneAndUpdate(
       { _id: req.params.id },
       {

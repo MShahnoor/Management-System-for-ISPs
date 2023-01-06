@@ -15,9 +15,10 @@ export const packagesReducer = (state, action) => {
         ),
       };
     case "EDIT_PACKAGE":
-      console.log("in edit package constext dispacnf");
+      console.log("In Edit package context dispatch");
+
       let updatedPackages = state.packages.map((a) => {
-        if (a.id == action.payload.id) {
+        if (a["_id"] == action.payload["_id"]) {
           a.name = action.payload.name;
           a.monthlyFee = action.payload.monthlyFee;
           a.mbs = action.payload.mbs;
@@ -36,7 +37,6 @@ export const packagesReducer = (state, action) => {
 
 export const PackagesContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(packagesReducer, { packages: [] });
-  console.log(state, "from store");
 
   return (
     <PackagesContext.Provider value={{ ...state, dispatch }}>

@@ -40,10 +40,9 @@ const deletePackage = async (req, res) => {
 };
 
 const editPackage = async (req, res) => {
-  console.log("Patch2 request recieved.");
+  console.log("Patch Package request recieved.");
+
   try {
-    console.log(req.params.id);
-    console.log(req.body);
     const package = await Package.findOneAndUpdate(
       { _id: req.params.id },
       {

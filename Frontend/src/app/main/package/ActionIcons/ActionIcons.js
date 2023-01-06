@@ -5,7 +5,6 @@ import DeleteAction from "./DeleteAction";
 import EditAction from "./EditAction";
 
 const ActionIcons = ({ obj }) => {
-  console.log(obj, "obj from ActionIcons");
   return (
     <Stack direction="row" alignItems="center" paddingLeft={9} height={15}>
       <DeleteAction id={obj["_id"]} />
