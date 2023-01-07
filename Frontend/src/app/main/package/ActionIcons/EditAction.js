@@ -48,9 +48,6 @@ const EditAction = (obj) => {
       setError(json.error);
     }
     if (response.ok) {
-      setName("");
-      setMonthlyFee("");
-      setMbs("");
       dispatch({
         type: "EDIT_PACKAGE",
         payload: { _id: obj.id._id, ...packageType },

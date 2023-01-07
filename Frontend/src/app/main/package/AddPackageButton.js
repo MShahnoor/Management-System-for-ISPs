@@ -51,8 +51,21 @@ export default function FormDialog() {
       setMonthlyFee("");
       setMbs("");
       dispatch({ type: "CREATE_PACKAGE", payload: json });
-      handleClose();
+
+      try {
+        const response = await fetch(
+          "http://localhost:3001/api/package/getPackages"
+        );
+        const json = await response.json();
+        if (response.ok) {
+          dispatch({ type: "SET_PACKAGES", payload: json });
+        }
+      } catch (error) {
+        setIsError(true);
+        setError(error.message);
+      }
     }
+    handleClose();
   };
 
   return (
