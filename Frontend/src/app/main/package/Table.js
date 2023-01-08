@@ -14,18 +14,18 @@ import { usePackagesContext } from "../hooks/usePackagesContext";
 import ActionIcons from "./ActionIcons/ActionIcons";
 
 const columns = [
-  { id: "name", label: "Name", minWidth: 200 },
+  { id: "name", label: "Name", minWidth: 50 },
   {
     id: "monthlyFee",
     label: "Monthly Fee",
-    minWidth: 10,
+    minWidth: 150,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
     id: "mbs",
     label: "Mbs",
-    minWidth: 170,
+    minWidth: 500,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
