@@ -136,7 +136,7 @@ export default function PackagesData() {
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.id}
+                        key={row._id}
                       >
                         {columns.map((column) => {
                           const value = row[column.id];
