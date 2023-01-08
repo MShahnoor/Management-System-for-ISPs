@@ -15,8 +15,20 @@ import ActionIcons from "./ActionIcons/ActionIcons";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 200 },
-  { id: "monthlyFee", label: "Monthly Fee", minWidth: 190 },
-  { id: "mbs", label: "Mbs", minWidth: 190 },
+  {
+    id: "monthlyFee",
+    label: "Monthly Fee",
+    minWidth: 10,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "mbs",
+    label: "Mbs",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
   {
     id: "actions",
     label: "Actions",
