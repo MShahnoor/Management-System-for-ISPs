@@ -1,7 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import DemoContent from "@fuse/core/DemoContent";
+import PaymentsData from "./Table";
+import FormDialog from "./AddPaymentButton";
+import { PaymentsContextProvider } from "../context/PaymentContext";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -16,28 +17,51 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-sidebarContent": {},
 }));
 
-function Payment(props) {
-  const { t } = useTranslation("examplePage");
-
+function Payments(props) {
   return (
-    <Root
-      header={
-        <div className="p-24">
-          {/* <h4>{t("TITLE")}</h4>
-           */}
-          <h4>Payment</h4>
-        </div>
-      }
-      content={
-        <div className="p-24">
-          <h4>Content</h4>
-
-          {/* <DemoContent /> */}
-        </div>
-      }
-      scroll="content"
-    />
+    <PaymentsContextProvider>
+      <Root
+        content={
+          <div
+            className="p-24"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "flex-end",
+                paddingBottom: 10,
+                paddingRight: 30,
+              }}
+            >
+              <FormDialog />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingRight: 30,
+              }}
+            >
+              <PaymentsData />
+            </div>
+          </div>
+        }
+        scroll="content"
+      />
+    </PaymentsContextProvider>
   );
 }
 
-export default Payment;
+export default Payments;

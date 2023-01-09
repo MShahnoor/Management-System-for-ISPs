@@ -2,7 +2,7 @@ const express = require('express')
 var cors = require('cors');
 const mongoose = require('mongoose')
 const areaRoutes = require("../routes/areaRoutes")
-
+const paymentRoutes = require("../routes/paymentRoutes")
 
 const app = express()
 const port = 3001
@@ -11,7 +11,8 @@ app.use(cors());
 
 
 //Routes
-app.use('/api/area', areaRoutes);    
+app.use('/api/area', areaRoutes); 
+app.use('/api/payment', paymentRoutes)   
 
 //patch Routes
 

@@ -8,19 +8,21 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useAreasContext } from "../../hooks/useAreasContext";
+import { usePaymentContext } from "../../hooks/usePaymentsContext";
 
 const EditAction = (obj) => {
-  const { dispatch } = useAreasContext();
+  const { dispatch } = usePaymentContext();
   const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState(obj.id.name);
-  const [code, setCode] = React.useState(obj.id.code);
+  const [serialNo, setSerialNo] = React.useState(obj.id.serialNo);
+  const [paymentDate, setPaymentDate] = React.useState(obj.id.paymentDate);
+  const [amount, setAmount] = React.useState(obj.id.amount);
+  const [error, setError] = React.useState(null);
 
 
   const handleClickOpen = () => {
     console.log("in edit func: ");
     console.log(obj);
-    console.log(obj.id.name);
+    console.log(obj.id.id);
     setOpen(true);
   };
 
@@ -28,20 +30,20 @@ const EditAction = (obj) => {
     setOpen(false);
   };
 
-  const editAreaHandler = async (e) => {
+  const editPaymentHandler = async (e) => {
     e.preventDefault();
    
 
-    const area = { code, name };
+    const payment = { serialNo, paymentDate, amount };
     
-    let url = `http://localhost:3001/api/area/editArea2/${obj.id.id}`
+    let url = `http://localhost:3001/api/payment/editPayment/${obj.id._id}`
     console.log(url)
 
     const response = await fetch(
       url,
       {
         method: "PATCH",
-        body: JSON.stringify(area),
+        body: JSON.stringify(payment),
         headers: {
           "Content-Type": "application/json",
         }
@@ -53,9 +55,10 @@ const EditAction = (obj) => {
       setError(json.error);
     }
     if (response.ok) {
-      setName("");
-      setCode("");
-      dispatch({ type: "EDIT_AREA", payload: { id: obj.id.id, ...area} });
+      setSerialNo("");
+      setPaymentDate("");
+      setAmount("");
+      dispatch({ type: "EDIT_PAYMENT", payload: { id: obj.id._id, ...payment} });
       handleClose();
     }
   };
@@ -70,32 +73,32 @@ const EditAction = (obj) => {
       >
         <EditIcon />
       </IconButton>
-      <Dialog open={open} onClose={handleClose} onSubmit={editAreaHandler}>
-        <DialogTitle>Add Area</DialogTitle>
+      <Dialog open={open} onClose={handleClose} onSubmit={editPaymentHandler}>
+        <DialogTitle>Edit Payment</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
           </DialogContentText>
           <TextField
-            value={code}
+            value={serialNo}
             autoFocus
             margin="dense"
-            id="code"
-            label="Area Code"
+            id="serialNo"
+            label="Serial No"
             type="text"
             fullWidth
             variant="standard"
             onChange={(e) => {
-              setCode(e.target.value);
+              setSerialNo(e.target.value);
             }}
           />
           <TextField
-            value={name}
+            value={paymentDate}
             autoFocus
             margin="dense"
-            id="name"
-            label="Area Name"
+            id="paymentDate"
+            label="Date"
             type="text"
             fullWidth
             variant="standard"
@@ -103,12 +106,25 @@ const EditAction = (obj) => {
               setName(e.target.value);
             }}
           />
+          <TextField
+            value={amount}
+            autoFocus
+            margin="dense"
+            id="amount"
+            label="Amount"
+            type="text"
+            fullWidth
+            variant="standard"
+            onChange={(e) => {
+              setAmount(e.target.value);
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button type="submit" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={editAreaHandler}>Submit</Button>
+          <Button onClick={editPaymentHandler}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>
