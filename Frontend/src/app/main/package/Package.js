@@ -1,7 +1,8 @@
 import { styled } from "@mui/material/styles";
-import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import DemoContent from "@fuse/core/DemoContent";
+import PackagesData from "./Table";
+import FormDialog from "./AddPackageButton";
+import { PackagesContextProvider } from "../context/PackageContext";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -16,28 +17,51 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-sidebarContent": {},
 }));
 
-function Package(props) {
-  const { t } = useTranslation("examplePage");
-
+function Packages(props) {
   return (
-    <Root
-      header={
-        <div className="p-24">
-          {/* <h4>{t("TITLE")}</h4>
-           */}
-          <h4>Package</h4>
-        </div>
-      }
-      content={
-        <div className="p-24">
-          <h4>Content</h4>
-
-          {/* <DemoContent /> */}
-        </div>
-      }
-      scroll="content"
-    />
+    <PackagesContextProvider>
+      <Root
+        content={
+          <div
+            className="p-24"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "flex-end",
+                paddingBottom: 10,
+                paddingRight: 30,
+              }}
+            >
+              <FormDialog />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "center",
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingRight: 30,
+              }}
+            >
+              <PackagesData />
+            </div>
+          </div>
+        }
+        scroll="content"
+      />
+    </PackagesContextProvider>
   );
 }
 
-export default Package;
+export default Packages;

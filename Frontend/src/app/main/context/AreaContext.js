@@ -13,27 +13,17 @@ export const areasReducer = (state, action) => {
         areas: state.areas.filter((a) => a.id !== action.payload._id),
       };
     case "EDIT_AREA":
-      console.log("in edit area constext dispacnf")
       let updatedAreas = state.areas.map((a) => {
-        if(a.id == action.payload.id){
-          a.code = action.payload.code
-          a.name = action.payload.name
-          return a
+        if (a.id == action.payload.id) {
+          a.code = action.payload.code;
+          a.name = action.payload.name;
+          return a;
         }
-        return a
-
-      } )
-      
-      return{
-       areas: updatedAreas
-      }  
-
-      // let index = state.areas.findIndex((a) => action.payload.id == a.id )
-      // console.log(index)
-      // state.areas[index].code = action.payload.code
-      // state.areas[index].name = action.payload.name
-      
-      // return state  
+        return a;
+      });
+      return {
+        areas: updatedAreas,
+      };
     default:
       return state;
   }

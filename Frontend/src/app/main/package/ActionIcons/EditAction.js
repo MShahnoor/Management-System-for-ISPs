@@ -8,16 +8,18 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useAreasContext } from "../../hooks/useAreasContext";
+import { usePackagesContext } from "../../hooks/usePackagesContext";
 
 const EditAction = (obj) => {
-  const { dispatch } = useAreasContext();
+  const { dispatch } = usePackagesContext();
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState(obj.id.name);
-  const [code, setCode] = React.useState(obj.id.code);
-
-
+  const [monthlyFee, setMonthlyFee] = React.useState(obj.id.monthlyFee);
+  const [mbs, setMbs] = React.useState(obj.id.mbs);
   const handleClickOpen = () => {
+    console.log("in edit function: ");
+    console.log(obj);
+
     setOpen(true);
   };
 
@@ -25,17 +27,17 @@ const EditAction = (obj) => {
     setOpen(false);
   };
 
-  const editAreaHandler = async (e) => {
+  const editPackageHandler = async (e) => {
     e.preventDefault();
 
-    const area = { code, name };
+    const packageType = { name, monthlyFee, mbs };
 
-    let url = `http://localhost:3001/api/area/editArea2/${obj.id.id}`;
-    console.log(url);
+    let url = `http://localhost:3001/api/package/editPackage/${obj.id._id}`;
 
     const response = await fetch(url, {
       method: "PATCH",
-      body: JSON.stringify(area),
+      body: JSON.stringify(packageType),
+
       headers: {
         "Content-Type": "application/json",
       },
@@ -46,7 +48,10 @@ const EditAction = (obj) => {
       setError(json.error);
     }
     if (response.ok) {
-      dispatch({ type: "EDIT_AREA", payload: { id: obj.id.id, ...area } });
+      dispatch({
+        type: "EDIT_PACKAGE",
+        payload: { _id: obj.id._id, ...packageType },
+      });
       handleClose();
     }
   };
@@ -61,32 +66,19 @@ const EditAction = (obj) => {
       >
         <EditIcon />
       </IconButton>
-      <Dialog open={open} onClose={handleClose} onSubmit={editAreaHandler}>
-        <DialogTitle>Add Area</DialogTitle>
+      <Dialog open={open} onClose={handleClose} onSubmit={editPackageHandler}>
+        <DialogTitle>Edit Package</DialogTitle>
         <DialogContent>
           <DialogContentText>
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
           </DialogContentText>
           <TextField
-            value={code}
-            autoFocus
-            margin="dense"
-            id="code"
-            label="Area Code"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e) => {
-              setCode(e.target.value);
-            }}
-          />
-          <TextField
             value={name}
             autoFocus
             margin="dense"
             id="name"
-            label="Area Name"
+            label="Package Name"
             type="text"
             fullWidth
             variant="standard"
@@ -94,12 +86,38 @@ const EditAction = (obj) => {
               setName(e.target.value);
             }}
           />
+          <TextField
+            value={monthlyFee}
+            autoFocus
+            margin="dense"
+            id="monthlyFee"
+            label="Monnthly Fee"
+            type="text"
+            fullWidth
+            variant="standard"
+            onChange={(e) => {
+              setMonthlyFee(e.target.value);
+            }}
+          />
+          <TextField
+            value={mbs}
+            autoFocus
+            margin="dense"
+            id="mbs"
+            label="Mbs"
+            type="text"
+            fullWidth
+            variant="standard"
+            onChange={(e) => {
+              setMbs(e.target.value);
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button type="submit" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={editAreaHandler}>Submit</Button>
+          <Button onClick={editPackageHandler}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>

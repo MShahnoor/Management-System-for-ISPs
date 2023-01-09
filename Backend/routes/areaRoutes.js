@@ -6,18 +6,15 @@ const {
   getAreas,
   addArea,
   deleteArea,
-  editArea
-} = require("../Controllers/areaControllers")
-
-
+  editArea,
+} = require("../Controllers/areaControllers");
 
 router.get("/getAreas", getAreas);
 
 router.post("/addArea", addArea);
 
-router.delete("/deleteArea/:id",deleteArea );
+router.delete("/deleteArea/:id", deleteArea);
 
-
-router.patch("/editArea2/:id", editArea)
+router.patch("/editArea2/:id", editArea);
 
 module.exports = router;
