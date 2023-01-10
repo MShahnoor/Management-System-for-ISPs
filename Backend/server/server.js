@@ -6,10 +6,10 @@ const paymentRoutes = require("../routes/paymentRoutes")
 const packageRoutes = require("../routes/packageRoutes");
 const userRoutes = require("../routes/userRoutes");
 
+const app = express();
 app.use(express.json())
 
 
-const app = express();
 const port = 3001;
 app.use(express.json());
 app.use(cors());
