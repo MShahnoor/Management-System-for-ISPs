@@ -26,7 +26,8 @@ app.use("/api/package", packageRoutes);
 mongoose
   .connect(
     "mongodb+srv://aneeqduraiz:unlock!!!@cluster0.ide38ku.mongodb.net/?retryWrites=true&w=majority"
-  )
+    // "mongodb://aneeqduraiz:unlock!!!@cluster0.ide38ku.mongodb.net/?authSource=admin"
+    )
   .then(() => {
     console.log("Connected to Mongo Atlas");
     app.listen(port, () =>

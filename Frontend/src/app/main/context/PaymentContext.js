@@ -5,7 +5,18 @@ export const PaymentContext = createContext();
 export const paymentReducer = (state, action) => {
   switch (action.type) {
     case "SET_PAYMENTS":
-      return { payments: action.payload };
+      console.log(action.payload)
+
+     let pays = action.payload.map((obj)=>{
+        let userId = obj.areaCode.code + obj.userId.autoID
+        return {
+          userId, serialNo: obj.serialNo, paymentDate: obj.paymentDate, amount: obj.amount
+        }
+
+      })
+      
+
+      return { payments: pays };
     case "CREATE_PAYMENT":
       return { payments: [action.payload, ...state.payments] };
     case "DELETE_PAYMENT":
