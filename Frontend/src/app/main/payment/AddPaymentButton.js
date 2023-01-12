@@ -10,12 +10,13 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { usePaymentContext } from "../hooks/usePaymentsContext";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function FormDialog() {
   const { dispatch } = usePaymentContext();
   const [open, setOpen] = React.useState(false);
   const [serialNo, setSerialNo] = React.useState("");
-  const [paymentDate, setPaymentDate] = React.useState("");
+  const [paymentDate, setPaymentDate] = React.useState(null);
   const [amount, setAmount] = React.useState("");
 
   const handleClickOpen = () => {
@@ -98,6 +99,32 @@ export default function FormDialog() {
               setPaymentDate(e.target.value);
             }}
           />
+           {/* <DatePicker
+              label="Payment Date"
+              value={paymentDate}
+              onChange={(newValue) => {
+                setPaymentDate(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} helperText={params?.inputProps?.placeholder} />
+              )}
+            /> */}
+
+            {/* <Controller
+                name="end"
+                control={control}
+                defaultValue=""
+                render={({ field: { onChange, value } }) => (
+                  <DateTimePicker
+                    value={value}
+                    onChange={onChange}
+                    renderInput={(_props) => (
+                      <TextField label="End" className="mt-8 mb-16 w-full" {..._props} />
+                    )}
+                   
+                  />
+                )}
+              /> */}
           <TextField
             value={amount}
             autoFocus

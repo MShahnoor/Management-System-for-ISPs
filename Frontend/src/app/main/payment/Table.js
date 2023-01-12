@@ -14,12 +14,12 @@ import { usePaymentContext } from "../hooks/usePaymentsContext";
 import ActionIcons from "./ActionIcons/ActionIcons";
 
 const columns = [
-  // { id: "userId", label: "User ID", minWidth: 190 },
+  { id: "userId", label: "User ID", minWidth: 120 },
   { id: "serialNo", label: "Serial No.", minWidth: 200 },
   {
     id: "paymentDate",
     label: "Payment Date",
-    minWidth: 180,
+    minWidth: 250,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
