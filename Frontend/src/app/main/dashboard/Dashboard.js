@@ -1,7 +1,9 @@
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import DemoContent from "@fuse/core/DemoContent";
+import Typography from "@mui/material/Typography";
+import TopPackages from "./packages/packages";
+import RevenueStats from "./revenue/RevenueStats";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -21,18 +23,21 @@ function Dashbaord(props) {
 
   return (
     <Root
-      header={
-        <div className="p-24">
-          {/* <h4>{t("TITLE")}</h4>
-           */}
-          <h4>Dashbaord</h4>
-        </div>
-      }
       content={
-        <div className="p-24">
-          <h4>Content</h4>
-
-          {/* <DemoContent /> */}
+        <div
+          className="p-24"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            width: "100%",
+          }}
+        >
+          <RevenueStats />
+          <Typography variant="h5" component="div">
+            Most Popular Packages.
+          </Typography>
+          <TopPackages />
         </div>
       }
       scroll="content"
