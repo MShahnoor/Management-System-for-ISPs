@@ -4,13 +4,12 @@ userSchema = new mongoose.Schema(
   {
     autoID: {
       type: Number,
-      maxLength: 2,
       required: true,
     },
     areaCode: {
-      type: String,
-      maxLength: 2,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: "Area"
     },
     firstName: {
       type: String,
@@ -25,8 +24,9 @@ userSchema = new mongoose.Schema(
       required: true,
     },
     package: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: 'Package'
     },
     balance: {
       type: Number,

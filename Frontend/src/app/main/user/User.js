@@ -4,6 +4,7 @@ import UsersData from "./Table";
 import FormDialog from "./AddUserButton";
 import { UsersContextProvider } from "../context/UserContext";
 
+
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
     backgroundColor: theme.palette.background.paper,
@@ -20,6 +21,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 function Users(props) {
   return (
     <UsersContextProvider>
+      
       <Root
         content={
           <div
@@ -60,6 +62,7 @@ function Users(props) {
         }
         scroll="content"
       />
+      
     </UsersContextProvider>
   );
 }

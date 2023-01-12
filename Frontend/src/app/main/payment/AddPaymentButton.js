@@ -10,26 +10,64 @@ import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import { usePaymentContext } from "../hooks/usePaymentsContext";
+import { useAreasContext } from "../hooks/useAreasContext";
+import { useUsersContext } from "../hooks/useUsersContext";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import MenuItem from "@mui/material/MenuItem";
 
 export default function FormDialog() {
   const { dispatch } = usePaymentContext();
+  const {areas, dispatch: areasDispatch} = useAreasContext();
+  const {users, dispatch: usersDispatch} = useUsersContext();
+
   const [open, setOpen] = React.useState(false);
+  const [userId, setUserId] = React.useState(null);
+  const [areaId, setAreaId] = React.useState(null);
   const [serialNo, setSerialNo] = React.useState("");
   const [paymentDate, setPaymentDate] = React.useState(null);
   const [amount, setAmount] = React.useState("");
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async() => {
     setOpen(true);
+    
+      try {
+        console.log(typeof(dispatch))
+        console.log(typeof(areasDispatch))
+        const response = await fetch("http://localhost:3001/api/area/getAreas");
+        const json = await response.json();
+        if (response.ok) {
+          areasDispatch({ type: "SET_AREAS", payload: json });
+        }
+      } catch (error) {
+        
+        console.log(error.message);
+      } 
+
+
+      try {
+        const response = await fetch("http://localhost:3001/api/user/getUsers");
+        const json = await response.json();
+        if (response.ok) {
+          usersDispatch({ type: "SET_USERS", payload: json });
+        }
+      } catch (error) {
+        console.log(error.message);}
+    
   };
 
   const handleClose = () => {
     setOpen(false);
+    console.log(users)
   };
 
   const addPaymentHandler = async (e) => {
     e.preventDefault();
+    userExists = false;
+    // users.map((user)=> {
+    //   if(user.autoID == userId && user.areaCode == )
+    // })
 
+    
     const payment = { serialNo, paymentDate, amount };
 
     const response = await fetch("http://localhost:3001/api/payment/addPayment", {
@@ -73,6 +111,40 @@ export default function FormDialog() {
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
           </DialogContentText>
+          
+           
+                  
+          <TextField
+                  id="outlined-select-currency"
+                  select
+                  value={areaId}
+                  fullWidth
+                  label="Area Code"
+                  variant="standard"
+                  onChange={(e) => {
+                    setAreaId(e.target.value);
+                  }}
+                >
+                  {areas.map((area) => (
+                    <MenuItem key={area.id} value={area.id}>
+                      {area.code}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+            value={userId}
+            autoFocus
+            margin="dense"
+            id="userId"
+            label="User ID"
+            type="text"
+            fullWidth
+            variant="standard"
+            onChange={(e) => {
+              setUserId(e.target.value);
+            }}
+          />
+
           <TextField
             value={serialNo}
             autoFocus
@@ -91,7 +163,7 @@ export default function FormDialog() {
             autoFocus
             margin="dense"
             id="paymentDate"
-            label="Date"
+            label="Date : yyyy/mm/dd"
             type="text"
             fullWidth
             variant="standard"

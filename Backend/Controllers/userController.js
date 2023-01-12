@@ -3,7 +3,10 @@ const mongoose = require("mongoose");
 
 const getUsers = async (req, res) => {
   try {
-    let response = await User.find().select(
+    let response = await User.find()
+    .populate("areaCode" , "code")
+    .populate("package" , "name")
+    .select(
       "autoID areaCode firstName lastName contact package balance status address"
     );
     // let newUsers = [];
@@ -26,29 +29,21 @@ const getUsers = async (req, res) => {
 };
 
 const addUser = async (req, res) => {
-  const {
-    autoID,
-    areaCode,
-    firstName,
-    lastName,
-    contact,
-    package,
-    balance,
-    status,
-    address,
-  } = req.body;
+  const addUser = {
+    autoID: req.body.autoID,
+    areaCode: req.body.areaCode.id,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    contact: req.body.contact,
+    package: req.body.package._id,
+    balance: req.body.balance,
+    status: req.body.status,
+    address: req.body.address,
+  } 
+  console.log("add user", addUser)
+
   try {
-    const user = await User.create({
-      autoID,
-      areaCode,
-      firstName,
-      lastName,
-      contact,
-      package,
-      balance,
-      status,
-      address,
-    });
+    const user = await User.create(addUser);
     res.status(200).json(user);
   } catch (err) {
     res.send("Error" + err);
@@ -78,17 +73,18 @@ const editUser = async (req, res) => {
       { _id: req.params.id },
       {
         autoID: req.body.autoID,
-        areaCode: req.body.areaCode,
+        
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         contact: req.body.contact,
-        package: req.body.package,
+        package: req.body.package._id,
         balance: req.body.balance,
         status: req.body.status,
         address: req.body.address,
       }
     );
     if (user) {
+      console.log( "From Edit USer router",req.body)
       res.status(200).json(user);
     }
   } catch (e) {

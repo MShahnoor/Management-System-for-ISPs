@@ -60,7 +60,7 @@ const ViewAction = (obj) => {
                   <TableCell component="th" scope="row">
                     <b>ID:</b>
                   </TableCell>
-                  <TableCell>{obj.id.autoID + obj.id.areaCode}</TableCell>
+                  <TableCell>{obj.id.autoID + obj.id.areaCode.code}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">
@@ -80,7 +80,7 @@ const ViewAction = (obj) => {
                   <TableCell component="th" scope="row">
                     <b>Package:</b>
                   </TableCell>
-                  <TableCell>{obj.id.package}</TableCell>
+                  <TableCell>{obj.id.package.name}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">

@@ -7,6 +7,6 @@ export const useAreasContext = () => {
   if (!context) {
     throw new Error(`useAreasContext must be used within a AreasContext`);
   }
-
+ console.log("In useAreaContext")
   return context;
 };

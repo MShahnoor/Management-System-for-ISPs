@@ -13,13 +13,15 @@ export const usersReducer = (state, action) => {
         users: state.users.filter((u) => u._id !== action.payload._id),
       };
     case "EDIT_USER":
+      
       let updatedUsers = state.users.map((a) => {
         if (a._id == action.payload._id) {
-          (a.areaCode = action.payload.areaCode),
-            (a.firstName = action.payload.firstName),
+          
+          (a.firstName = action.payload.firstName),
             (a.lastName = action.payload.lastName),
             (a.contact = action.payload.contact),
-            (a.package = action.payload.package),
+            (a.package._id = action.payload.package._id),
+            (a.package.name = action.payload.package.name),
             (a.balance = action.payload.balance),
             (a.status = action.payload.status),
             (a.address = action.payload.address);

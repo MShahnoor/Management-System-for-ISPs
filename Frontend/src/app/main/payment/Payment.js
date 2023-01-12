@@ -3,6 +3,8 @@ import FusePageSimple from "@fuse/core/FusePageSimple";
 import PaymentsData from "./Table";
 import FormDialog from "./AddPaymentButton";
 import { PaymentsContextProvider } from "../context/PaymentContext";
+import { AreasContextProvider } from "../context/AreaContext";
+import { UsersContextProvider } from "../context/UserContext";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -20,6 +22,8 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 function Payments(props) {
   return (
     <PaymentsContextProvider>
+      <AreasContextProvider>
+      <UsersContextProvider>
       <Root
         content={
           <div
@@ -60,6 +64,8 @@ function Payments(props) {
         }
         scroll="content"
       />
+      </UsersContextProvider>
+      </AreasContextProvider>
     </PaymentsContextProvider>
   );
 }

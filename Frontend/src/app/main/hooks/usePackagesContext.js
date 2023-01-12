@@ -7,6 +7,6 @@ export const usePackagesContext = () => {
   if (!context) {
     throw new Error(`usePackagesContext must be used within a AreasContext`);
   }
-
+console.log("In usePackages Context")
   return context;
 };

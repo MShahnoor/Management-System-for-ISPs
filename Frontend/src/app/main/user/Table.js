@@ -80,13 +80,16 @@ export default function UsersData() {
   };
 
   React.useEffect(() => {
-    console.log(rows);
+   
+    
+
     setUsersModified(
-      rows.map((obj) => ({
+      rows.map((obj) => (
+        {
         _id: obj._id,
-        userID: obj.autoID + obj.areaCode,
+        userID: obj.autoID + obj.areaCode.code,
         name: obj.firstName + " " + obj.lastName,
-        package: obj.package,
+        package: obj.package.name,
         balance: obj.balance,
         status: obj.status == true ? "Active" : "Inactive",
         actions: obj.actions,

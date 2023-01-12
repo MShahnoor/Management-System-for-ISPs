@@ -10,34 +10,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import { useUsersContext } from "../../hooks/useUsersContext";
+import { usePackagesContext } from "../../hooks/usePackagesContext";
 
 const EditAction = (obj) => {
   const { dispatch } = useUsersContext();
+ // const { packages , dispatch: packagesDispatch } = usePackagesContext();
+  //const { packages , setPackages } = React.useState([{_id: 34, name:"Temp"}]);
   const [open, setOpen] = React.useState(false);
   const [error, setError] = React.useState("");
   const [firstName, setFirstName] = React.useState(obj.id.firstName);
   const [lastName, setLastName] = React.useState(obj.id.lastName);
   const [contact, setContact] = React.useState(obj.id.contact);
-  const [packageType, setPackageType] = React.useState(obj.id.package);
+  const [packageId, setPackageId] = React.useState(obj.id.package);
   const [balance, setBalance] = React.useState(obj.id.balance);
   const [status, setStatus] = React.useState(obj.id.status);
   const [packages, setPackages] = React.useState([
     {
-      value: "Basic",
-      label: "Basic",
+      _id: "Basic",
+      name: "Basic",
     },
     {
-      value: "Hacker",
-      label: "Hacker",
-    },
-    {
-      value: "Premium",
-      label: "Premium",
-    },
-    {
-      value: "Standard",
-      label: "Standard",
-    },
+      _id: "Hacker",
+      name: "Hacker",
+    }
   ]);
   const [statuses, setStatuses] = React.useState([
     {
@@ -50,32 +45,52 @@ const EditAction = (obj) => {
     },
   ]);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async() => {
+    
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/package/getPackages"
+      );
+      const json = await response.json();
+      if (response.ok) {
+
+       // packagesDispatch({ type: "SET_PACKAGES", payload: json });
+       console.log("the json: ", json)
+        setPackages(json)
+        
+        //console.log("PAckages Obj: ", packages)
+      }
+    } catch (error) {
+      console.log(error.message);}
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    // console.log(packages)
+    // console.log(obj)
   };
 
   const editUserHandler = async (e) => {
     e.preventDefault();
-
+    console.log("PAckahe id: ",packageId)
     const user = {
       autoID: obj.id.autoID,
-      areaCode: obj.id.areaCode,
+      
       firstName,
       lastName,
       contact,
-      package: packageType,
+      package:  packageId,
       balance,
       status,
       address: obj.id.address,
     };
+  
 
     let url = `http://localhost:3001/api/user/editUser/${obj.id._id}`;
     console.log(url);
-
+    console.log(obj.id._id)
+    console.log("user: ", user)
     const response = await fetch(url, {
       method: "PATCH",
       body: JSON.stringify(user),
@@ -84,9 +99,10 @@ const EditAction = (obj) => {
       },
     });
     const json = await response.json();
+    
 
     if (!response.ok) {
-      setError(json.error);
+      setError(json.error.message);
     }
     if (response.ok) {
       dispatch({ type: "EDIT_USER", payload: { _id: obj.id._id, ...user } });
@@ -159,16 +175,18 @@ const EditAction = (obj) => {
                 id="outlined-select-currency"
                 select
                 fullWidth
-                value={packageType}
+                value={packageId}
                 label="Package"
                 variant="standard"
                 onChange={(e) => {
-                  setPackageType(e.target.value);
+                console.log(e.target)  
+                setPackageId(e.target.value);
+                  
                 }}
               >
                 {packages.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
+                  <MenuItem key={option._id} value={option} >
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>

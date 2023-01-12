@@ -10,6 +10,7 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import MenuItem from "@mui/material/MenuItem";
 import { useUsersContext } from "../hooks/useUsersContext";
+import { usePackagesContext } from "../hooks/useUsersContext";
 
 export default function FormDialog() {
   const { dispatch } = useUsersContext();
@@ -18,9 +19,10 @@ export default function FormDialog() {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [contact, setContact] = React.useState("");
-  const [packageType, setPackageType] = React.useState("");
+  const [packageId, setPackageId] = React.useState("");
   const [balance, setBalance] = React.useState("");
   const [address, setAddress] = React.useState("");
+  const [users, setUsers] = React.useState();
   const [packages, setPackages] = React.useState([
     {
       value: "Basic",
@@ -39,7 +41,7 @@ export default function FormDialog() {
       label: "Standard",
     },
   ]);
-  const [areaCodes, setAreaCodes] = React.useState([
+  const [areas, setAreas] = React.useState([
     {
       value: "A",
       label: "A",
@@ -58,9 +60,43 @@ export default function FormDialog() {
     },
   ]);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async() => {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/api/package/getPackages"
+      );
+      const json = await response.json();
+      if (response.ok) {
+        setPackages(json)
+      }
+    } catch (error) {
+      console.log(error.message);}
+
+      try {
+        const response = await fetch(
+          "http://localhost:3001/api/area/getareas"
+        );
+        const json = await response.json();
+        if (response.ok) {
+          setAreas(json)
+        }
+      } catch (error) {
+        console.log(error.message);}
+
+        try {
+          const response = await fetch(
+            "http://localhost:3001/api/user/getUsers"
+          );
+          const json = await response.json();
+          if (response.ok) {
+            setUsers(json)
+          }
+        } catch (error) {
+          console.log(error.message);}
+
     setOpen(true);
-  };
+  }
+
 
   const handleClose = () => {
     setOpen(false);
@@ -69,18 +105,29 @@ export default function FormDialog() {
   const addUserHandler = async (e) => {
     e.preventDefault();
 
+    let specificUsers = users.filter((a)=> a.areaCode.code == areaCode.code)
+    let max = 0;
+    for (let u in specificUsers){
+      console.log(specificUsers[u].autoID)
+      if(specificUsers[u].autoID > max){
+        // console.log(u.autoID)
+        max = specificUsers[u].autoID
+      }
+    }
+    
+
     const user = {
-      autoID: 1,
+      autoID:max+1,
       areaCode,
       firstName,
       lastName,
       contact,
-      package: packageType,
+      package: packageId,
       balance,
       status: true,
       address,
     };
-
+console.log("User form addUserdialog", user)
     const response = await fetch("http://localhost:3001/api/user/addUser", {
       method: "POST",
       body: JSON.stringify(user),
@@ -99,7 +146,7 @@ export default function FormDialog() {
       setFirstName("");
       setLastName("");
       setContact("");
-      setPackageType("");
+      setPackageId("");
       setBalance("");
       setAddress("");
       dispatch({ type: "CREATE_USER", payload: json });
@@ -186,9 +233,9 @@ export default function FormDialog() {
                     setAreaCode(e.target.value);
                   }}
                 >
-                  {areaCodes.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                  {areas.map((option) => (
+                    <MenuItem key={option.id} value={option}>
+                      {option.code}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -216,23 +263,25 @@ export default function FormDialog() {
               autoComplete="off"
             >
               <div>
-                <TextField
-                  id="outlined-select-currency"
-                  select
-                  fullWidth
-                  value={packageType}
-                  label="Package"
-                  variant="standard"
-                  onChange={(e) => {
-                    setPackageType(e.target.value);
-                  }}
-                >
-                  {packages.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+              <TextField
+                id="outlined-select-currency"
+                select
+                fullWidth
+                value={packageId}
+                label="Package"
+                variant="standard"
+                onChange={(e) => {
+                console.log(e.target)  
+                setPackageId(e.target.value);
+                  
+                }}
+              >
+                {packages.map((option) => (
+                  <MenuItem key={option._id} value={option} >
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
               </div>
             </Box>
             <TextField
