@@ -1,8 +1,9 @@
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import TopPackages from "./packages/packages";
 import Typography from "@mui/material/Typography";
+import TopPackages from "./packages/packages";
+import RevenueStats from "./revenue/RevenueStats";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -32,6 +33,7 @@ function Dashbaord(props) {
             width: "100%",
           }}
         >
+          <RevenueStats />
           <Typography variant="h5" component="div">
             Most Popular Packages.
           </Typography>
