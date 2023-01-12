@@ -5,19 +5,10 @@ const mongoose = require("mongoose");
 const getPayments = async (req, res) => {
     console.log("Get Payments Request Recieved");
     try {
-      let response = await Payment.find().select("serialNo paymentDate amount");
-  
-    //   let areas = [];
-    //   for (i = 0; i < response.length; i++) {
-    //     obj = {
-    //       id: response[i]._id,
-    //       code: response[i].code,
-    //       name: response[i].name,
-    //       activeUsers: 2,
-    //       streets: 3,
-    //     };
-    //     areas.push(obj);
-    //   }
+      let response = await Payment.find()
+      .populate("areaCode" , "code -_id")
+      .populate("userId", "autoID -_id")
+      .select("areaCode userId serialNo paymentDate amount");
       res.status(200).send(response);
     } catch (error) {
       res.send(error.message);
@@ -26,10 +17,10 @@ const getPayments = async (req, res) => {
 
   const addPayment = async (req, res) => {
     console.log("Add Payment req recieved");
-    const { serialNo, paymentDate, amount } = req.body;
+    const { areaCode, userId, serialNo, paymentDate, amount } = req.body;
     //const paymentDate = new Date(paymentDate)
     try {
-      const payment = await Payment.create({ serialNo, paymentDate, amount });
+      const payment = await Payment.create({ areaCode, userId, serialNo, paymentDate, amount });
       res.status(200).json(payment);
     } catch (err) {
       res.send("Error");
